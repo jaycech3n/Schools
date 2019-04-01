@@ -28,8 +28,9 @@ Definition exercise_1_2 (A : UU)
 
 Theorem exercise_1_3 : (0 = 1) → empty.
 Proof.
-  exact transport
-        (λ _,
+  exact "transport
+        (λ n, ind_nat (λ _, UU) tt (λ _ _, empty) n)
+        0.
 Qed.
 
 (** Exercise 1.4. ∑ (A : Universe) (A → empty) *)
