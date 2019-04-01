@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Require Import UniMath.Foundations.PartD.
 
 (** The following axiom allows us to inhabit any type.

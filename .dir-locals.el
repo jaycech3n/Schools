@@ -1,7 +1,7 @@
 ((coq-mode
   . ((eval . 
 	   (let* ((Workshops-topdir (expand-file-name (locate-dominating-file buffer-file-name ".dir-locals.el")))
-		  (unimath-topdir (concat Workshops-topdir "UniMath/")))
+		  (unimath-topdir "/home/jayce/sources/UniMath/"))
 	     (setq fill-column 100)
 	     (make-local-variable 'coq-use-project-file)
 	     (setq coq-use-project-file nil)
