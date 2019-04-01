@@ -26,17 +26,23 @@ Definition exercise_1_2 (A : UU)
 
 (** Exercise 1.3. Id_nat (0, succ 0) → empty *)
 
+Check transportf.
+Check nat_rect.
+Check (nat_rect (λ _, UU) unit (λ _ _, empty)).
+Check (λ n, (nat_rect (λ _, UU) unit (λ _ _, empty) n)).
+Check λ p: 0 = 1, transportf (nat_rect (λ _, UU) unit (λ _ _, empty)) p.
+Check nat_rect (λ _ : nat, UU) unit (λ (_ : nat) (_ : UU), ∅) 0.
+
 Theorem exercise_1_3 : (0 = 1) → empty.
 Proof.
-  exact transport
-        (λ _,
+  exact (λ p, transportf (nat_rect (λ _, UU) unit (λ _ _, empty)) p tt).
 Qed.
 
 (** Exercise 1.4. ∑ (A : Universe) (A → empty) *)
 
 Theorem exercise_1_4 : ∑ A:UU, (A → empty).
 Proof.
-  exact fill_me.
+  exact (empty ,, λ x, x).
 Qed.
 
 (** Exercise 1.6. (∑ (x : A) B × P x) → B × ∑ (x : A) P x,
@@ -44,33 +50,33 @@ Qed.
 
 Theorem exercise_1_6 (A B:UU) (P:A → UU) : (∑ x:A, B × P x) → B × ∑ x:A, P x.
 Proof.
-  exact fill_me.
+  exact (λ p, (pr1(pr2 p) ,, (pr1 p ,, pr2(pr2 p)))).
 Qed.
 
 (** Exercise 1.7. B → (B → A) → A, given types A and B *)
 
 Theorem exercise_1_7 (A B : UU) : B → (B → A) → A.
-Proof. exact fill_me. Qed.
+Proof. exact (λ b f, f b). Qed.
 
 (** Exercise 1.8. B → ∏ (A : Universe) (B → A) → A, given type B *)
 
 Theorem exercise_1_8 (B : UU) : B → ∏ A:UU, (B → A) → A.
-Proof. exact fill_me. Qed.
+Proof. exact (λ b _ f, f b). Qed.
 
 (** Exercise 1.9. (∏ (A : Universe) (B → A) → A) → B, given type B *)
 
 Theorem exercise_1_9 (B : UU) : (∏ A:UU, (B → A) → A) → B.
-Proof. exact fill_me. Qed.
+Proof. exact (λ f, f B (λ x, x)). Qed.
 
 (** Exercise 2.1. Using the basic rules, construct addition on natural numbers. *)
 
-Definition nat_plus : nat → nat → nat := fill_me.
+Definition nat_plus : nat → nat → nat := λ m n, (nat_rect (λ _, nat → nat) (λ n, n) (λ _ f k, S(f k)) m) n.
 
 (** Exercise 2.2. State associativity and commutativity of addition in a type-theoretic way. *)
 
-Definition exercise_2_2_assoc : UU := fill_me.
+Definition exercise_2_2_assoc : UU := ∏(m n k : nat), nat_plus (nat_plus m n) k = nat_plus m (nat_plus n k).
 
-Definition exercise_2_2_comm : UU := fill_me.
+Definition exercise_2_2_comm : UU := ∏(m n : nat), nat_plus m n = nat_plus n m.
 
 (** Exercise 2.3. Establish associativity and commutativity of addition. What does this mean in type theory? *)
 
