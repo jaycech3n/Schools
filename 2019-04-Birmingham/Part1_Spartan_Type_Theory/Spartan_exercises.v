@@ -80,14 +80,40 @@ Definition exercise_2_2_comm : UU := ∏(m n : nat), nat_plus m n = nat_plus n m
 
 (** Exercise 2.3. Establish associativity and commutativity of addition. What does this mean in type theory? *)
 
+Theorem zero_n_k_assoc: ∏(n k : nat), nat_plus (nat_plus 0 n) k = nat_plus 0 (nat_plus n k).
+Proof.
+  exact (λ n k, idpath(nat_plus n k)).
+Qed.
+
 Theorem nat_plus_is_assoc : exercise_2_2_assoc.
 Proof.
-  exact fill_me.
+  exact (nat_rect
+           (λ m, ∏(n k : nat), nat_plus (nat_plus m n) k = nat_plus m (nat_plus n k))
+           zero_n_k_assoc
+           (λ m IH n k, maponpaths S (IH n k))).
 Qed.
+
+Lemma nat_plus_l_zero: ∏(n : nat), n = nat_plus n 0.
+Proof.
+  induction n.
+  exact (idpath 0).
+  exact (maponpaths S IHn).
+Qed.
+
+Lemma nat_plus_l_S: ∏(n k : nat), S(nat_plus n k) = nat_plus k (S n).
+Proof.
+  induction n.
+  exact (λ k, idpath (S k)).
+  exact (λ k, maponpaths S (IHn k)).
+Qed.
+
+Print exercise_2_2_comm.
 
 Theorem nat_plus_is_comm : exercise_2_2_comm.
 Proof.
-  exact fill_me.
+  unfold exercise_2_2_comm; intros; induction m.
+  exact (nat_plus_l_zero n).
+  exact (nat_plus_l_S m n).
 Qed.
 
 (** Exercise 3. Write down the following types:
