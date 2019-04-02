@@ -118,7 +118,11 @@ Qed.
 
     1. even natural numbers *)
 
-Definition exercise_3_1 : UU := fill_me.
+(* I'll attempt to not use if-then-else: *)
+
+Definition isEven (n : nat): UU  := nat_rect (λ _, UU) unit (λ _ t, t → empty) n.
+
+Definition exercise_3_1 : UU := ∑(n : nat), isEven n.
 
 (** 2. prime numbers *)
 
