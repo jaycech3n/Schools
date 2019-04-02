@@ -7,7 +7,7 @@ Written by Anders Mörtberg.
 
 *)
 Require Import UniMath.Foundations.Preamble.
-Require Import fundamentals_lecture.
+(* Require Import fundamentals_lecture. *)
 
 Definition idfun : forall (A : UU), A -> A := fun (A : UU) (a : A) => a.
 
@@ -26,14 +26,14 @@ Definition andbool (b : bool) : bool -> bool :=
 
 (** Exercise: define boolean or: *)
 
-(* Definition orbool (b : bool) : bool -> bool := ... *)
+Definition orbool (b : bool) : bool -> bool :=
+  ifbool (bool → bool) (λ _, true) (idfun bool) b.
 
-(* This should satisfy:
+(* This should satisfy: *)
 Eval compute in orbool true true.     (* true *)
 Eval compute in orbool true false.    (* true *)
 Eval compute in orbool false true.    (* true *)
 Eval compute in orbool false false.   (* false *)
-*)
 
 
 (** * Natural numbers *)

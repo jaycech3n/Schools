@@ -118,17 +118,26 @@ Qed.
 
     1. even natural numbers *)
 
-(* I'll attempt to not use if-then-else: *)
+Definition negb := bool_rect (λ _, bool) false true.
 
-Definition isEven (n : nat): UU  := nat_rect (λ _, UU) unit (λ _ t, t → empty) n.
+Definition booltoUU := bool_rect (λ _, UU) unit empty.
 
-Definition exercise_3_1 : UU := ∑(n : nat), isEven n.
+Definition is_even := nat_rect (λ _, bool) true (λ _ b, negb b).
+
+Definition exercise_3_1 : UU := ∑(n : nat), booltoUU(is_even n).
 
 (** 2. prime numbers *)
 
-Definition nat_mult : nat → nat → nat := fill_me.
+Definition nat_mult : nat → nat → nat :=
+  nat_rect
+    (λ _, nat → nat)
+    (λ _, 0)
+    (λ _ f n, nat_plus (f n) n).
 
-Definition exercise_3_2 : UU := fill_me.
+Definition is_prime (p : nat) : UU :=
+  ((p = 0) → empty) × ((p = 1) → empty) × ∏(m n : nat), p = nat_mult m n → ((p = m) ⨿ (p = n)).
+
+Definition exercise_3_2 : UU := ∑(n : nat), is_prime n.
 
 (** 3. functions A → nat which attain zero *)
 
