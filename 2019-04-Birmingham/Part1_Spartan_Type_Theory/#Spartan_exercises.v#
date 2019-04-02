@@ -118,6 +118,8 @@ Qed.
 
     1. even natural numbers *)
 
+Definition 
+
 Definition exercise_3_1 : UU := fill_me.
 
 (** 2. prime numbers *)
