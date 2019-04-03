@@ -6,8 +6,9 @@
     Exercises originally suggested by Benedikt Ahrens and Anders Mörtberg
     (for UniMath school 2017) and elaborated by Ralph Matthes (CNRS, IRIT,
     Univ. Toulouse, France)
-*)
-Require Import UniMath.Foundations.PartA.
+ *)
+Require Import UniMath.Foundations.All.
+Require Import UniMath.MoreFoundations.All.
 
 Locate "≃". (** written in Agda mode as [\simeq] *)
 Print weq.
@@ -21,25 +22,42 @@ Eval compute in (X ≃ Y).
 (** there is a function [f] so that for given image [y] on can find the preimage [x] uniquely, but not only as element of [X] but even the pair consisting of the preimage and the proof that it is the preimage is unique. *)
 End weqdef.
 
-
 (** Prove that the identity function is an equivalence *)
 Lemma idisweq (X : UU) : isweq (idfun X).
-Abort.
+Proof.
+  exact (iscontrcoconustot X).
+Qed.
+
+Print weq.
 
 (** Package this up as an equivalence *)
 Definition idweq (X : UU) : X ≃ X.
-Abort.
+Proof.
+  unfold weq.
+  exists (idfun X).
+  exact (idisweq X).
+Qed.
 
 (** consider finding an alternative proof with [isweq_iso] that is extremely useful in the UniMath library *)
 
+Print isweq_iso.
+
+Lemma idisweq' (X : UU) : isweq (idfun X).
+Proof.
+  apply (isweq_iso (idfun X) (idfun X)).
+  intro; compute; reflexivity.
+  intro; compute; reflexivity.
+Qed.
 
 (** Prove that any map to empty is an equivalence *)
 Lemma isweqtoempty {X : UU} (f : X -> ∅) : isweq f.
-Abort.
+Proof.
+  unfold isweq; intro y; induction y.
+Qed.
 
 (** Package this up as an equivalence *)
 Definition weqtoempty {X : UU} (f : X -> ∅) : X ≃ ∅.
-Abort.
+Proof. unfold weq. exact (f,,isweqtoempty f). Qed.
 
 (** Prove that the composition of equivalences is an equivalence.
 
@@ -52,8 +70,10 @@ identity path is always the identity, and this already computationally, which
 means that [cbn] gets rid of it. *)
 Theorem compisweq {X Y Z : UU} (f : X -> Y) (g : Y -> Z)
         (isf : isweq f) (isg : isweq g) : isweq (g ∘ f).
-Abort.
-
+Proof.
+  intros.
+  unfold isweq; intro z.
+  unfold iscontr.
 (** Package this up as an equivalence *)
 Definition weqcomp {X Y Z : UU} (w1 : X ≃ Y) (w2 : Y ≃ Z) : X ≃ Z.
 Abort.

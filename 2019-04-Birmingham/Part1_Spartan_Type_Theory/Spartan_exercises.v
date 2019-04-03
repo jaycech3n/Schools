@@ -36,7 +36,7 @@ Check nat_rect (λ _ : nat, UU) unit (λ (_ : nat) (_ : UU), ∅) 0.
 Theorem exercise_1_3 : (0 = 1) → empty.
 Proof.
   exact (λ p, transportf (nat_rect (λ _, UU) unit (λ _ _, empty)) p tt).
-Qed.
+Defined.
 
 (** Exercise 1.4. ∑ (A : Universe) (A → empty) *)
 
@@ -51,22 +51,22 @@ Qed.
 Theorem exercise_1_6 (A B:UU) (P:A → UU) : (∑ x:A, B × P x) → B × ∑ x:A, P x.
 Proof.
   exact (λ p, (pr1(pr2 p) ,, (pr1 p ,, pr2(pr2 p)))).
-Qed.
+Defined.
 
 (** Exercise 1.7. B → (B → A) → A, given types A and B *)
 
 Theorem exercise_1_7 (A B : UU) : B → (B → A) → A.
-Proof. exact (λ b f, f b). Qed.
+Proof. exact (λ b f, f b). Defined.
 
 (** Exercise 1.8. B → ∏ (A : Universe) (B → A) → A, given type B *)
 
 Theorem exercise_1_8 (B : UU) : B → ∏ A:UU, (B → A) → A.
-Proof. exact (λ b _ f, f b). Qed.
+Proof. exact (λ b _ f, f b). Defined.
 
 (** Exercise 1.9. (∏ (A : Universe) (B → A) → A) → B, given type B *)
 
 Theorem exercise_1_9 (B : UU) : (∏ A:UU, (B → A) → A) → B.
-Proof. exact (λ f, f B (λ x, x)). Qed.
+Proof. exact (λ f, f B (λ x, x)). Defined.
 
 (** Exercise 2.1. Using the basic rules, construct addition on natural numbers. *)
 
@@ -83,7 +83,7 @@ Definition exercise_2_2_comm : UU := ∏(m n : nat), nat_plus m n = nat_plus n m
 Theorem zero_n_k_assoc: ∏(n k : nat), nat_plus (nat_plus 0 n) k = nat_plus 0 (nat_plus n k).
 Proof.
   exact (λ n k, idpath(nat_plus n k)).
-Qed.
+Defined.
 
 Theorem nat_plus_is_assoc : exercise_2_2_assoc.
 Proof.
@@ -91,28 +91,28 @@ Proof.
            (λ m, ∏(n k : nat), nat_plus (nat_plus m n) k = nat_plus m (nat_plus n k))
            zero_n_k_assoc
            (λ m IH n k, maponpaths S (IH n k))).
-Qed.
+Defined.
 
 Lemma nat_plus_l_zero: ∏(n : nat), n = nat_plus n 0.
 Proof.
   induction n.
   exact (idpath 0).
   exact (maponpaths S IHn).
-Qed.
+Defined.
 
 Lemma nat_plus_l_S: ∏(m n : nat), S(nat_plus m n) = nat_plus m (S n).
 Proof.
   induction m.
   reflexivity.
   exact (λ n, maponpaths S (IHm n)).
-Qed.
+Defined.
 
 Theorem nat_plus_is_comm : exercise_2_2_comm.
 Proof.
   unfold exercise_2_2_comm; intros; induction m.
   exact (nat_plus_l_zero n).
   exact (pathscomp0 (maponpaths S IHm) (nat_plus_l_S n m)).
-Qed.
+Defined.
 
 (** Exercise 3. Write down the following types:
 
