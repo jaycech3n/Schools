@@ -68,12 +68,54 @@ and [total2_paths2_f] that is an introduction rule allowing to establish an
 equation between pairs. There, transport arises, but transport along the
 identity path is always the identity, and this already computationally, which
 means that [cbn] gets rid of it. *)
+
+Lemma isweq_imp_linv {X Y : UU} (f : X → Y) : isweq f → ∑ g, ∏ x, g(f x) = x.
+Proof.
+  intro isweq_f; unfold isweq in isweq_f.
+  use tpair.
+  - exact (λ y, pr11 (isweq_f y)).
+  - cbn.
+
 Theorem compisweq {X Y Z : UU} (f : X -> Y) (g : Y -> Z)
         (isf : isweq f) (isg : isweq g) : isweq (g ∘ f).
 Proof.
-  intros.
-  unfold isweq; intro z.
-  unfold iscontr.
+  (* Fix z : Z, and construct a basepoint xx for the homotopy fiber of (g ∘ f) over z. *)
+  intro z; assert (vv : hfiber (g ∘ f) z).
+
+  - (* First we have a canonical basepoint of (hfiber g z). *)
+    assert (yy : hfiber g z).
+    {
+      use tpair.
+      exact (pr1 (pr1 (isg z))).
+      cbn; exact (pr2 (pr1 (isg z))).
+    }
+
+    (* From this we get a canonical y : Y and py : g y = z. *)
+    destruct yy as [y py].
+
+    (* Then we have a canonical xx : hfiber f y, which splits into x : X and px : f x = y. *)
+    assert (xx : hfiber f y).
+    {
+      use tpair.
+      exact (pr1 (pr1 (isf y))).
+      cbn; exact (pr2 (pr1 (isf y))).
+    }
+    destruct xx as [x px].
+
+    (* Then x, together with a suitable equality constructed from px and py,
+       is a basepoint for (hfiber (g ∘ f) z). *)
+    exact (x ,, pathscomp0 (maponpaths g px) py).
+
+  - (* Now we show contractibility, claiming that all (uu : hfiber (g ∘ f) z) are equal to vv. *)
+    exists vv.
+    intro uu; destruct vv as [x px]; destruct uu as [u pu].
+
+    (* To show equality of pairs it suffices to show the relevant equalities on their components: *)
+    Print hfiber.
+
+    About total2_paths2_f.
+    Search (isweq _ → _).
+
 (** Package this up as an equivalence *)
 Definition weqcomp {X Y Z : UU} (w1 : X ≃ Y) (w2 : Y ≃ Z) : X ≃ Z.
 Abort.
