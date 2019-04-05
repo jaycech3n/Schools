@@ -69,18 +69,36 @@ equation between pairs. There, transport arises, but transport along the
 identity path is always the identity, and this already computationally, which
 means that [cbn] gets rid of it. *)
 
+(* First a lemma: weak equivalences have a left pointwise inverse. *)
 Lemma isweq_imp_linv {X Y : UU} (f : X → Y) : isweq f → ∑ g, ∏ x, g(f x) = x.
 Proof.
-  intro isweq_f; unfold isweq in isweq_f.
-  use tpair.
+  (* Assume weak equivalence of f and construct a left inverse g. *)
+  intro isweq_f. use tpair.
+
+  (* Weak equivalence of f gives us, for every y : Y, a canonical point pr1(hfiber f y) of hfiber f y.
+     This consists of a point x together with a path f x = y.
+     Define g to be the function sending y to x.*)
   - exact (λ y, pr11 (isweq_f y)).
-  - cbn.
+
+  (* Show g is a left inverse for f. *)
+  - set (g := λ y, pr11 (isweq_f y));
+      cbn; intro;
+        apply pathsinv0.
+
+    (* To show x = g(f x), we exhibit an equality between elements of the fiber of f over (f x),
+       whose first components are x and g(f x).
+       But xx := (x ,, idpath (f x)) is an element of the fiber, and contracts to the canonical basepoint.
+     *)
+    pose (xx := (x ,, idpath (f x)) : hfiber f (f x)).
+    apply (base_paths xx).
+    exact (pr2 (isweq_f (f x)) xx).
+Defined.
 
 Theorem compisweq {X Y Z : UU} (f : X -> Y) (g : Y -> Z)
         (isf : isweq f) (isg : isweq g) : isweq (g ∘ f).
 Proof.
-  (* Fix z : Z, and construct a basepoint xx for the homotopy fiber of (g ∘ f) over z. *)
-  intro z; assert (vv : hfiber (g ∘ f) z).
+  (* Fix z : Z, and construct a basepoint uu for the homotopy fiber of (g ∘ f) over z. *)
+  intro z; assert (uu : hfiber (g ∘ f) z).
 
   - (* First we have a canonical basepoint of (hfiber g z). *)
     assert (yy : hfiber g z).
@@ -106,14 +124,12 @@ Proof.
        is a basepoint for (hfiber (g ∘ f) z). *)
     exact (x ,, pathscomp0 (maponpaths g px) py).
 
-  - (* Now we show contractibility, claiming that all (uu : hfiber (g ∘ f) z) are equal to vv. *)
-    exists vv.
-    intro uu; destruct vv as [x px]; destruct uu as [u pu].
+  - (* Now we show contractibility, claiming that all (vv : hfiber (g ∘ f) z) are equal to uu. *)
+    exists uu.
+    intro vv; destruct uu as [u pu]; destruct vv as [v pv].
 
     (* To show equality of pairs it suffices to show the relevant equalities on their components: *)
-    Print hfiber.
-
-    About total2_paths2_f.
+    use total2_paths2_f.
     Search (isweq _ → _).
 
 (** Package this up as an equivalence *)
